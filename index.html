@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مصفوفتي | MyMatrix</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Libraries for Charts and PDF -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">📘 مصفوفتي</div>
+            <ul>
+                <li><a href="#" class="nav-link active" data-page="home">🏠 الرئيسية</a></li>
+                <li><a href="#" class="nav-link" data-page="matrix">📋 المصفوفة</a></li>
+                <li><a href="#" class="nav-link" data-page="progress">📈 تقرير الإنجاز</a></li>
+                <li><a href="#" class="nav-link" data-page="settings">⚙️ الإعدادات</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- 1. Home Page -->
+        <section id="page-home" class="page active">
+            <h1>أتقِن وقتك، أتقِن حياتك</h1>
+            <p class="subtitle">"مصفوفتي" تساعدك على التركيز على ما هو مهم حقًا باستخدام مصفوفة أيزنهاور لإدارة الوقت.</p>
+            
+            <div class="matrix-explanation">
+                <div class="quadrant-expl q1"><h3>هام وعاجل</h3><p>الأزمات، المشاريع ذات المواعيد النهائية</p></div>
+                <div class="quadrant-expl q2"><h3>هام وغير عاجل</h3><p>التخطيط، بناء العلاقات، تطوير الذات</p></div>
+                <div class="quadrant-expl q3"><h3>غير هام وعاجل</h3><p>المقاطعات، بعض المكالمات والاجتماعات</p></div>
+                <div class="quadrant-expl q4"><h3>غير هام وغير عاجل</h3><p>مضيعات الوقت، أنشطة تافهة</p></div>
+            </div>
+
+            <button id="startNowBtn" class="btn-primary">🚀 أنشئ مصفوفتك الآن</button>
+        </section>
+
+        <!-- 2. Matrix Board Page -->
+        <section id="page-matrix" class="page">
+            <div class="matrix-header">
+                <h2>مصفوفة المهام</h2>
+                <button id="addTaskBtn" class="btn-primary">+</button>
+            </div>
+            <div class="matrix-board">
+                <!-- Quadrant 1: Urgent & Important -->
+                <div class="quadrant" id="quadrant-1" data-quadrant="1">
+                    <div class="quadrant-title q1-bg">
+                        <h3><span class="quadrant-icon">🟩</span> قم به الآن</h3>
+                        <small>عاجل وهام</small>
+                    </div>
+                    <div class="tasks-container"></div>
+                </div>
+                <!-- Quadrant 2: Not Urgent & Important -->
+                <div class="quadrant" id="quadrant-2" data-quadrant="2">
+                    <div class="quadrant-title q2-bg">
+                        <h3><span class="quadrant-icon">🟦</span> خطط له</h3>
+                        <small>غير عاجل وهام</small>
+                    </div>
+                    <div class="tasks-container"></div>
+                </div>
+                <!-- Quadrant 3: Urgent & Not Important -->
+                <div class="quadrant" id="quadrant-3" data-quadrant="3">
+                    <div class="quadrant-title q3-bg">
+                        <h3><span class="quadrant-icon">🟧</span> فوّضه</h3>
+                        <small>عاجل وغير هام</small>
+                    </div>
+                    <div class="tasks-container"></div>
+                </div>
+                <!-- Quadrant 4: Not Urgent & Not Important -->
+                <div class="quadrant" id="quadrant-4" data-quadrant="4">
+                    <div class="quadrant-title q4-bg">
+                        <h3><span class="quadrant-icon">🟥</span> تجنبه</h3>
+                        <small>غير عاجل وغير هام</small>
+                    </div>
+                    <div class="tasks-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Progress Page -->
+        <section id="page-progress" class="page">
+            <h2>تقرير الإنجاز</h2>
+            <div id="progress-summary">
+                <p>إجمالي المهام المضافة: <span id="total-tasks">0</span></p>
+                <p>المهام المنجزة: <span id="completed-tasks">0</span></p>
+            </div>
+            <div id="quadrant-4-warning" class="warning-box hidden">
+                ⚠️ تنبيه: يبدو أنك تقضي الكثير من الوقت في مهام غير هامة وغير عاجلة. حاول التركيز على المربع 2!
+            </div>
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+        </section>
+
+        <!-- 4. Settings Page -->
+        <section id="page-settings" class="page">
+            <h2>الإعدادات</h2>
+            <div class="setting-item">
+                <label for="darkModeToggle">🌙 الوضع الليلي</label>
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+             <div class="setting-item">
+                <label>📄 تصدير المهام</label>
+                <button id="exportPdfBtn" class="btn-secondary">تصدير كملف PDF</button>
+            </div>
+            <div class="setting-item">
+                <label>🗑️ حذف كل البيانات</label>
+                <button id="deleteAllBtn" class="btn-danger">حذف كل المهام</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Task Modal (Add/Edit) -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">×</span>
+            <h3 id="modalTitle">إضافة مهمة جديدة</h3>
+            <form id="taskForm">
+                <input type="hidden" id="taskId">
+                <div class="form-group">
+                    <label for="taskTitle">عنوان المهمة</label>
+                    <input type="text" id="taskTitle" required placeholder="مثال: التحضير لاجتماع الغد">
+                </div>
+                <div class="form-group">
+                    <label for="taskDesc">وصف قصير (اختياري)</label>
+                    <textarea id="taskDesc" rows="3" placeholder="تفاصيل إضافية عن المهمة..."></textarea>
+                </div>
+                <div class="form-group-inline">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="taskUrgent">
+                        <label for="taskUrgent">✔️ عاجل</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="taskImportant">
+                        <label for="taskImportant">✔️ هام</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">حفظ المهمة</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
